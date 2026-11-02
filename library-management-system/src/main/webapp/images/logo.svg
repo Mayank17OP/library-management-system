@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96" role="img"
+     aria-label="Library Management System - Delhi Technical Campus">
+    <defs>
+        <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#072A5A"/>
+            <stop offset="1" stop-color="#1E6FE0"/>
+        </linearGradient>
+    </defs>
+
+    <!-- mark -->
+    <rect x="4" y="16" width="64" height="64" rx="16" fill="url(#mark)"/>
+    <path d="M22 62.5V36.5A3.5 3.5 0 0 1 25.5 33H50v29.5H25.5A3.5 3.5 0 0 0 22 66v-3.5z"
+          fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M30 42h14M30 49h14" stroke="#8FC2FF" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- text -->
+    <text x="88" y="48" font-family="Georgia, 'Times New Roman', serif" font-size="27"
+          font-weight="700" fill="#0B3A7A">Library Management System</text>
+    <text x="88" y="72" font-family="Inter, Arial, sans-serif" font-size="13"
+          letter-spacing="2.2" fill="#4A5C77">DELHI TECHNICAL CAMPUS &#183; CIC-309</text>
+</svg>

@@ -1,0 +1,61 @@
+# =============================================================================
+#  Library Management System - Docker Compose
+#  ----------------------------------------------------------------------------
+#  Starts two containers:
+#     db   : MySQL 8 with library_db created from sql/schema.sql + sql/seed.sql
+#     app  : Tomcat 10.1 serving the WAR as the root application
+#
+#  Usage:
+#      docker compose up --build        # first time
+#      docker compose up -d             # afterwards, in the background
+#      docker compose down              # stop
+#      docker compose down -v           # stop AND delete the database volume
+#
+#  Then open:  http://localhost:8080
+# =============================================================================
+
+services:
+
+  db:
+    image: mysql:8.0
+    container_name: lms-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: library_db
+      MYSQL_USER: lms_user
+      MYSQL_PASSWORD: lms_pass
+    ports:
+      # 3307 on the host, so it never clashes with a MySQL already installed
+      - "3307:3306"
+    volumes:
+      - lms-db-data:/var/lib/mysql
+      # Executed in alphabetical order the first time the volume is created
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql:ro
+      - ./sql/seed.sql:/docker-entrypoint-initdb.d/2-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-prootpass"]
+      interval: 5s
+      timeout: 5s
+      retries: 25
+      start_period: 20s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lms-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: "jdbc:mysql://db:3306/library_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8"
+      DB_USER: lms_user
+      DB_PASSWORD: lms_pass
+      DB_POOL_SIZE: "10"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  lms-db-data:

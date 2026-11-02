@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--=
+  ============================================================================
+  Library Management System - deployment descriptor
+  ============================================================================
+  Everything global lives here:
+    * filter order  (UTF-8 encoding first, then authentication)
+    * welcome file  (index.jsp -> /home)
+    * session policy (cookie only, HttpOnly)
+    * custom error pages for 404 and 500 (no stack traces in the browser)
+  ============================================================================
+-->
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>Library Management System</display-name>
+    <description>
+        Library Management System - Software Engineering (CIC-309),
+        Delhi Technical Campus. JSP + Servlet + JDBC + MySQL 8 on Tomcat 10.1.
+    </description>
+
+    <!--= ==================================================================
+         1. FILTERS
+         Declared here (and not with @WebFilter) because the ORDER matters:
+         the character encoding must be set before anything reads a parameter,
+         and authentication must run before the protected servlets.
+         ================================================================== -->
+    <filter>
+        <filter-name>Utf8Filter</filter-name>
+        <filter-class>com.dtc.lms.filter.Utf8Filter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Utf8Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.dtc.lms.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--= ==================================================================
+         2. START PAGE
+         index.jsp immediately forwards to the HomeServlet (/home).
+         ================================================================== -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!--= ==================================================================
+         3. SESSION POLICY
+         ================================================================== -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <name>LMSSESSION</name>
+            <http-only>true</http-only>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <!--= ==================================================================
+         4. ERROR PAGES - the user never sees a Java stack trace
+         ================================================================== -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/error/404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/views/error/500.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/WEB-INF/views/error/500.jsp</location>
+    </error-page>
+
+</web-app>

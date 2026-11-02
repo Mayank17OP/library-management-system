@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Library Management System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>📚 Library Management System</h1>
+    <nav>
+      <button data-tab="books" class="active">Books</button>
+      <button data-tab="members">Members</button>
+      <button data-tab="loans">Loans &amp; Fines</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="books" class="tab active">
+      <h2>Book Catalog</h2>
+      <form id="book-form" class="card">
+        <input type="hidden" id="book-id" />
+        <input id="book-title" placeholder="Title" required />
+        <input id="book-author" placeholder="Author" required />
+        <input id="book-isbn" placeholder="ISBN" required />
+        <input id="book-copies" type="number" min="1" value="1" required title="Total copies" />
+        <button type="submit">Save book</button>
+        <button type="button" id="book-cancel" class="secondary hidden">Cancel</button>
+      </form>
+      <input id="book-search" class="search" placeholder="Search by title, author or ISBN…" />
+      <table>
+        <thead><tr><th>Title</th><th>Author</th><th>ISBN</th><th>Available</th><th></th></tr></thead>
+        <tbody id="book-rows"></tbody>
+      </table>
+    </section>
+
+    <section id="members" class="tab">
+      <h2>Members</h2>
+      <form id="member-form" class="card">
+        <input id="member-name" placeholder="Full name" required />
+        <input id="member-email" type="email" placeholder="Email" required />
+        <button type="submit">Add member</button>
+      </form>
+      <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Books out</th><th></th></tr></thead>
+        <tbody id="member-rows"></tbody>
+      </table>
+    </section>
+
+    <section id="loans" class="tab">
+      <h2>Loans &amp; Fines</h2>
+      <form id="loan-form" class="card">
+        <select id="loan-member" required></select>
+        <select id="loan-book" required></select>
+        <input id="loan-days" type="number" min="1" value="14" required title="Loan period (days)" />
+        <button type="submit">Check out</button>
+      </form>
+      <p class="muted">Fine rate: ₹<input id="fine-rate" type="number" min="0" step="1" value="5" /> per overdue day</p>
+      <table>
+        <thead><tr><th>Member</th><th>Book</th><th>Due</th><th>Status</th><th>Fine (₹)</th><th></th></tr></thead>
+        <tbody id="loan-rows"></tbody>
+      </table>
+      <p id="total-fines" class="muted"></p>
+    </section>
+  </main>
+
+  <footer>Data is saved in this browser's local storage.</footer>
+  <script src="app.js"></script>
+</body>
+</html>
